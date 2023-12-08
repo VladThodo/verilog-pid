@@ -22,7 +22,6 @@
 
 // clk_in freq should be equal to 16 * desired baud rate
 
-// 
 
 module receiver(
     input rx_data,
