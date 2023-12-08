@@ -27,7 +27,6 @@ input [7:0] send_data;
 
 output data_rdy, send_rdy, tx_data;
 
-
 output wire [7:0] data;
 
 wire clk_div;
