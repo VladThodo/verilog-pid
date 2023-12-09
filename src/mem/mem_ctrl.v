@@ -1,4 +1,4 @@
-// Memory controller - to be directly addressed by ou UART
+// Memory controller - to be directly addressed by our UART
 
 module mem_ctrl(
     input clk_in,
@@ -7,10 +7,33 @@ module mem_ctrl(
     input [7:0] data_in,
     output write_enable,
     output reg [7:0] data_out,
-    output [7:0] addr);
+    output reg [7:0] addr = 0);
 
-    always @(posedge clk_in) begin
-        data_out = data_out + 1;
+    wire rdy_pulse;
+    reg [2:0] state = 3'b000;
+    reg [2:0] next_state = 3'b000;
+    reg [1:0] rec_cnt = 0;
+    
+    parameter rec_addr = 0, rec_data = 1;
+    
+    edge_detector detector(.clk_in(clk_in), .signal_in(data_rdy), .sig_pulse(rdy_pulse));
+
+    always @(posedge rdy_pulse) begin
+        if(data_in == 255) 
+            rec_cnt <= 0;
+        else begin   
+            if(rec_cnt == 1) begin
+                rec_cnt <= 0;
+                data_out <= data_in;
+                state <= 1;
+            end else begin
+                rec_cnt <= rec_cnt + 1;
+                addr <= data_in;
+                state <= 0;
+            end
+        end
     end
+
+    assign write_enable = (rdy_pulse)&&(clk_in)&&(state);
 
 endmodule

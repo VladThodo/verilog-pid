@@ -31,12 +31,10 @@ module UART(
     output tx_data,
     output wire [7:0] data);
 
-wire clk_div;
+//clk_divider div1(.clk_in(clk_in), .clk_out(clk_div));
 
-clk_divider div1(.clk_in(clk_in), .clk_out(clk_div));
+receiver rec1(.clk_in(clk_in), .data_rdy(data_rdy), .rx_data(rx_data), .data(data), .reset(reset));
 
-receiver rec1(.clk_in(clk_div), .data_rdy(data_rdy), .rx_data(rx_data), .data(data), .reset(reset));
-
-transmitter tran1(.clk_in(clk_div), .send(send), .reset(reset), .send_data(send_data), .send_rdy(send_rdy), .tx_data(tx_data));
+transmitter tran1(.clk_in(clk_in), .send(send), .reset(reset), .send_data(send_data), .send_rdy(send_rdy), .tx_data(tx_data));
 
 endmodule
