@@ -4,6 +4,7 @@ set_property IOSTANDARD LVCMOS33 [get_ports tx_data]
 set_property PACKAGE_PIN E3 [get_ports clk_in]
 set_property PACKAGE_PIN C17 [get_ports rx_data]
 set_property PACKAGE_PIN D18 [get_ports tx_data]
+create_clock -period 10 -name sys_clk -add [get_ports clk_in]
 
 set_property DRIVE 12 [get_ports tx_data]
 set_property SLEW SLOW [get_ports tx_data]

@@ -7,12 +7,15 @@ module wrapper(
     output tx_data,
     output [15:0] p);
 
+    (*mark_debug = "true" *) wire clk;
     wire serial_clk;
     wire data_rdy;
-    wire [7:0] data_link;
+    (*mark_debug = "true" *) wire [7:0] data_link;
     wire write_enable;
     wire [7:0] data_out;
     wire [7:0] addr;
+
+    assign clk = clk_in;
 
     clock_wizard wizard1(
         .clk_in(clk_in), 

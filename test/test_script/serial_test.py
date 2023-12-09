@@ -4,7 +4,7 @@ import os
 import serial
 import time
 
-ser = serial.Serial('COM5', 9600)
+ser = serial.Serial('COM8', 9600)
 
 
 # reset
