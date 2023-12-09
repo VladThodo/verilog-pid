@@ -42,3 +42,7 @@ opt_design
 # Bitsream
 
 write_bitstream -force $outputDir/wrapper.bit
+
+# Debug probes
+
+write_debug_probes -force $outputDir/debug.ltx
