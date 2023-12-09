@@ -41,8 +41,11 @@ connect_debug_port u_ila_0/clk [get_nets [list clk]]
 set_property port_width 1 [get_debug_ports u_ila_0/probe0]
 connect_debug_port u_ila_0/probe0 [get_nets [list data_rdy]]
 create_debug_port u_ila_0 probe1
-set_property port_width 8 [get_debug_ports u_ila_0/probe1]
-connect_debug_port u_ila_0/probe1 [get_nets [list {data_link[0]} {data_link[1]} {data_link[2]} {data_link[3]} {data_link[4]} {data_link[5]} {data_link[6]} {data_link[7]}]]
+set_property port_width 5 [get_debug_ports u_ila_0/probe1]
+connect_debug_port u_ila_0/probe1 [get_nets [list {addr[0]} {addr[1]} {addr[2]} {addr[3]} {addr[4]}]]
+create_debug_port u_ila_0 probe2
+set_property port_width 8 [get_debug_ports u_ila_0/probe2]
+connect_debug_port u_ila_0/probe2 [get_nets [list {data_link[0]} {data_link[1]} {data_link[2]} {data_link[3]} {data_link[4]} {data_link[5]} {data_link[6]} {data_link[7]}]]
 
 # Implementation
 
