@@ -31,6 +31,9 @@ module UART(
     output tx_data,
     output wire [7:0] data);
 
+
+//wire clk_s;
+
 //clk_divider div1(.clk_in(clk_in), .clk_out(clk_div));
 
 receiver rec1(.clk_in(clk_in), .data_rdy(data_rdy), .rx_data(rx_data), .data(data), .reset(reset));

@@ -28,12 +28,12 @@ module mem_ctrl(
                 state <= 1;
             end else begin
                 rec_cnt <= rec_cnt + 1;
-                addr <= data_in;
+                addr <= data_in[4:0];
                 state <= 0;
             end
         end
     end
 
-    assign write_enable = (rdy_pulse)&&(clk_in)&&(state);
+    assign write_enable = (rdy_pulse)&&(state);
 
 endmodule

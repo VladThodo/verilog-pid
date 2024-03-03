@@ -19,13 +19,15 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
-// clk_in freq should be equal to 16 * desired baud rate
-
+/* State machine for receiving serial data in 8N1 format. A data_rdy signal is generated when the data has been received 
+ Clk_en freq should be equal to 16 * desired baud rate
+ clock is enabled via a clock enable signal from the clock wizard 
+*/
 
 module receiver(
     input rx_data,
     input clk_in,
+    input clk_en,
     input reset,
     output reg [7:0] data,
     output reg data_rdy);
@@ -55,45 +57,32 @@ module receiver(
         if (reset)
             state = idle;
         else
-            case (state)
-                idle: begin
-                    clk_cnt <= 8'b0;
-                    init_cnt <= 4'b0;
-                  
-                    if (rx_data == 1'b0)
-                        state = start;
-                end
-                
-                start: begin
-                
-                    init_cnt = init_cnt + 1'b1;
-                    
+            if (clk_en) begin
+                case (state)
+                    idle: begin
+                        clk_cnt <= 8'b0;
+                        init_cnt <= 4'b0;               
+                        if (rx_data == 1'b0)
+                            state = start;
+                    end               
+                start: begin                
+                    init_cnt = init_cnt + 1'b1;                   
                     if (init_cnt >= 8)
-                        state = receiving;
-                        
-                    end
-                
-                receiving: begin
-                    
-                    clk_cnt = clk_cnt + 1'b1;
-                    
+                        state = receiving;                       
+                    end              
+                receiving: begin                
+                    clk_cnt = clk_cnt + 1'b1;                   
                     if (clk_cnt >= 143)
                         state = ready;
                     else if (clk_cnt % 16 == 0)
-                        data = (data >> 1) | (rx_data << 7);
-                        
-                    end
-                    
-                ready: begin
-                
-                    clk_cnt = clk_cnt + 1'b1;
-                    
+                        data = (data >> 1) | (rx_data << 7);                   
+                    end                 
+                ready: begin              
+                    clk_cnt = clk_cnt + 1'b1;                  
                     if (clk_cnt >= 160) 
-                        state = idle;
-                    
-                    end
-                    
-            endcase
+                        state = idle;                 
+                    end     
+                endcase
+        end
     end
-    
 endmodule
