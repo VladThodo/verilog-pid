@@ -4,8 +4,8 @@
 `define REG_I     1 //RW
 `define REG_D     2 //RW
 `define REG_SP    3 //RW
-`define REG_PID_O 4 //R
-`define REG_PWM_O 5 //R
+`define REG_PID_O 14 //R
+`define REG_PWM_O 15 //R
 
 module memory(
     input clk_in,
@@ -22,19 +22,22 @@ module memory(
     input wire [15:0] pid_o_i,
     input wire [15:0] pwm_o_i);
 
-    reg[15:0] mem [4:0];
-
+    reg[15:0] mem [15:0];
+  
     //WRITE
     always @(posedge clk_in) begin
         mem[`REG_PID_O] <= pid_o_i;
         mem[`REG_PWM_O] <= pwm_o_i;
         if (write_enable)
-            case (w_addr)
+            mem[w_addr] <= w_data;
+            //case (w_addr)
+             //   mem[w_addr] <= w_data;
+                /*
                 `REG_P  : mem[w_addr] <= w_data;
                 `REG_I  : mem[w_addr] <= w_data;
                 `REG_D  : mem[w_addr] <= w_data;
-                `REG_SP : mem[w_addr] <= w_data;
-            endcase
+                `REG_SP : mem[w_addr] <= w_data;*/
+           // endcase
     end
 
     //READ
