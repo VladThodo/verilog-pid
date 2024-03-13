@@ -48,28 +48,22 @@ module mem_ctrl(
                     if (state == idle) begin    // proceed to store address if in idle state
                         addr <= data_in[3:0];
                         next_state <= rec_addr;
-                    end else if (state == rec_addr) begin   // address stored, store the first (high) byte
-                        data_out[15:8] <= data_in;
-                        next_state <= first_byte;
-                    end else if (state == first_byte) begin // first byte stored, proceed to store the second one
-                        data_out[7:0] <= data_in;
-                        next_state <= write;            
-                    end else next_state <= idle;
+                    end
                 end
                 default: begin
                     if (state == idle) begin    // default setting, if in idle stay in idle
                         next_state <= idle;
                     end else if (state == rec_addr) begin   // address stored, store the first (high) byte
-                        data_out[15:8] <= data_in;
+                        data_out[15:8] <= data_in[7:0];
                         next_state <= first_byte;
                     end else if (state == first_byte) begin // first byte stored, proceed to store the second one
-                        data_out[7:0] <= data_in;                  
-                        next_state <= write;
-                    end else next_state <= idle;              
+                        data_out[7:0] <= data_in[7:0];                  
+                        next_state = write;
+                    end             
                 end
             endcase
         if (state == write) next_state <= idle; // always keep write_enable high for only one clock cycle
-        state <= next_state;
+        state = next_state;
     end
 
 endmodule

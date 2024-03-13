@@ -79,7 +79,7 @@ module receiver(
                     end                 
                 ready: begin              
                     clk_cnt = clk_cnt + 1'b1;                  
-                    if (clk_cnt >= 160) 
+                    if (clk_cnt >= 144) 
                         state = idle;                 
                     end     
                 endcase

@@ -7,12 +7,11 @@ module wrapper(
     output tx_data,
     output [15:0] p);
 
-    (*mark_debug = "true" *) wire clk;
     wire serial_clk;
-    wire data_rdy;
+    (*mark_debug = "true" *) wire data_rdy;
     (*mark_debug = "true" *) wire [7:0] data_link;
-    wire write_enable;
-    wire [7:0] data_out;
+    (*mark_debug = "true" *) wire write_enable;
+    (*mark_debug = "true" *) wire [15:0] data_out;
     wire [7:0] addr;
 
     assign clk = clk_in;
@@ -45,6 +44,5 @@ module wrapper(
         .write_enable(write_enable),
         .w_addr(addr),
         .w_data(data_out),
-        .p(p)
-    );
+        .p(p));
 endmodule
