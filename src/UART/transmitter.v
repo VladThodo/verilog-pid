@@ -1,27 +1,8 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 11/29/2023 06:42:22 PM
-// Design Name: 
-// Module Name: transmitter
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
-/* State machine for transmitting serial data in 8N1 format. A busy signal indicates that the circuit is not ready to accept data for transmission
- Clk_en freq should be equal to 16 * desired baud rate
- clock is enabled via a clock enable signal from the clock wizard 
+/* 
+    State machine for transmitting serial data in 8N1 format. 
+    A busy signal indicates that the circuit is not ready to accept data for transmission
+    Clk_en freq should be equal to 16 * desired baud rate
+    clock is enabled via a clock enable signal from the clock wizard 
 */
 
 module transmitter(
@@ -57,15 +38,17 @@ module transmitter(
     always @(posedge clk_in or posedge reset) begin
         if (reset)
             state = idle;
+        else if (send == 1 & state == idle) begin
+            send_cnt = 8'b0;
+            state = start;
+        end
         else
             if (clk_en) begin
                 case (state)
                     idle: begin
                         tx_data = 1;
-                        send_cnt = 8'b0;                   
-                    if(send == 1) 
-                        state = start; 
-                    end                   
+                        send_cnt = 8'b0;           
+                    end                           
                     start: begin                  
                         tx_data = 0;
                         send_cnt = send_cnt + 1'b1;
@@ -84,7 +67,7 @@ module transmitter(
                 done: begin                    
                     tx_data = 1;
                     send_cnt = send_cnt + 1'b1;                   
-                    if(send_cnt >= 160) 
+                    if(send_cnt >= 170) 
                         state = idle;                       
                     end
                 endcase

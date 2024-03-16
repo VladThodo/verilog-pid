@@ -1,4 +1,4 @@
-// 32 bytes memory block
+// 16 x 16 bytes memory block
 
 `define REG_P     0 //RW
 `define REG_I     1 //RW
@@ -28,21 +28,17 @@ module memory(
     always @(posedge clk_in) begin
         mem[`REG_PID_O] <= pid_o_i;
         mem[`REG_PWM_O] <= pwm_o_i;
-        if (write_enable)
-            mem[w_addr] <= w_data;
-            //case (w_addr)
-             //   mem[w_addr] <= w_data;
-                /*
-                `REG_P  : mem[w_addr] <= w_data;
-                `REG_I  : mem[w_addr] <= w_data;
-                `REG_D  : mem[w_addr] <= w_data;
-                `REG_SP : mem[w_addr] <= w_data;*/
-           // endcase
+        if (write_enable) // write restrictions 
+            case (w_addr)        
+                default: mem[w_addr] <= w_data;
+                `REG_PID_O: ;     // do nothing, this is our PID out 
+                `REG_PWM_O: ;     // do nothing, this is our PWM generator output
+            endcase
     end
 
     //READ
     always @(posedge clk_in) begin
-        r_data_o <= mem[r_addr[4:0]];
+        r_data_o <= mem[r_addr];
     end
     
     assign p = mem[`REG_P];
