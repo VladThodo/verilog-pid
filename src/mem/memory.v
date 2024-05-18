@@ -4,6 +4,11 @@
 `define REG_I             1 //RW
 `define REG_D             2 //RW
 `define REG_SP            3 //RW
+`define REG_OFF           4 // RW
+`define REG_I_UP          5 // RW, upper integral limit
+`define REG_I_LOW         6 // RW, lower integral limit
+`define REG_FLAGS         7 // RW, flags register
+`define REG_PID_O_VAL     8 // RW, hard coded PID output value for testing and startup
 
 `define REG_S_I           13 //R
 `define REG_PID_O         14 //R
@@ -24,6 +29,9 @@ module memory(
     output wire [15:0] d,
     output wire [15:0] s,
     output wire [15:0] sp,
+    output wire [15:0] offset_o,
+    output wire [15:0] int_up_o,
+    output wire [15:0] int_low_o,
     input wire [15:0] pid_o_i,
     input wire [15:0] pwm_o_i);
 
@@ -55,5 +63,8 @@ module memory(
     assign d = mem[`REG_D]; // D coefficient
     assign s = mem[`REG_S_I]; // measured distance from sensor
     assign sp = mem[`REG_SP]; // PID set point
+    assign offset_o = mem[`REG_OFF]; // PID controller offset
+    assign int_up_o = mem[`REG_I_UP]; // PID controller offset
+    assign int_low_o = mem[`REG_I_LOW]; // PID controller offset
     
 endmodule

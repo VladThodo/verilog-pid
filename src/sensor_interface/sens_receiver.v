@@ -65,10 +65,10 @@ module sens_receiver(
                 end else if (state == start) begin
                     next_state <= first_byte;
                 end else if (state == first_byte) begin
-                    sens_data_o[15:8] <= sens_data - 48;    // substract ASCII value for 0
+                    sens_data_o[15:0] <= (sens_data - 48) * 10;    // substract ASCII value for 0
                     next_state <= second_byte;
                 end else if (state == second_byte) begin
-                    sens_data_o[7:0] <= sens_data - 48;   // substract ASCII value for 0
+                    sens_data_o <= sens_data_o + (sens_data - 48);   // substract ASCII value for 0
                     next_state <= third_byte;
                 end else if (state == third_byte) begin
                     if (sens_data == 13) next_state <= idle;                

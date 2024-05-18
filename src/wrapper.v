@@ -25,6 +25,9 @@ module wrapper(
     wire [15:0] i, d, s, sp;
     wire pwm_clk;
     wire [15:0] pid_out;
+    wire [15:0] offset;
+    wire [15:0] int_low;
+    wire [15:0] int_high;
     
     assign clk = clk_in;
 
@@ -74,7 +77,11 @@ module wrapper(
         .d(d),
         .s(s),
         .sp(sp),
+        .int_low_o(int_low),
+        .int_up_o(int_high),
+        .pid_o_i(pid_out),
         .sens_data_i(sens_data_o),
+        .offset_o(offset),
         .sens_data_rdy_i(sens_write_data));
         
    sens_receiver rec1(
@@ -94,7 +101,10 @@ module wrapper(
         .d_coef_i(d),
         .sp_i(sp),
         .sens_data_i(s),
-        .pid_o(pid_out)
+        .pid_o(pid_out),
+        .int_low_i(int_low),
+        .int_up_i(int_high),
+        .offset_i(offset)
    );
    
    pwm_gen pwm_gen(
