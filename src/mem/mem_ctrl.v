@@ -91,12 +91,24 @@ module mem_ctrl(
                     if (state == idle) begin    // proceed to store address if in idle state
                         addr <= data_in[3:0];
                         next_state <= rec_addr;
+                    end else if (state == rec_addr) begin   // address stored, store the first (high) byte
+                        data_out[15:8] <= data_in[7:0];
+                        next_state <= first_byte;
+                    end else if (state == first_byte) begin // first byte stored, proceed to store the second one
+                        data_out[7:0] <= data_in[7:0];                  
+                        next_state = write;
                     end
                 end
                 `READ_WORD: begin                   // Read detected
                     if (state == idle) begin
                         r_addr_o <= data_in[3:0];
                         next_state <= r_first_byte_off;
+                    end else if (state == rec_addr) begin   // address stored, store the first (high) byte
+                        data_out[15:8] <= data_in[7:0];
+                        next_state <= first_byte;
+                    end else if (state == first_byte) begin // first byte stored, proceed to store the second one
+                        data_out[7:0] <= data_in[7:0];                  
+                        next_state = write;
                     end
                 end
                 default: begin

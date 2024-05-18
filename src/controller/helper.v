@@ -12,27 +12,31 @@ module pid_controller(
     input [15:0] d_coef_i,
     input [15:0] sp_i,
     input [15:0] sens_data_i,
-    output reg [15:0] pid_o
+    output reg signed [15:0] pid_o
 );
 
-    reg [15:0] p = 0, d = 0, prev_err = 0;
-    reg [31:0] i = 0;
-    reg [15:0] discrete_sum [6:0];
-    reg [2:0] sum_addr = 0;
     
     reg [31:0] pid;
-    wire [15:0] err;
+
+    wire signed [16:0] err;
     
     assign err = sp_i - sens_data_i;
-    
     always @(posedge clk_in_i or posedge reset_i) begin
         if(reset_i == 1) begin
             // reset integral component
-            sum_addr <= 0;
-            for (i=0; i<7; i=i+1) discrete_sum[i] <= 0;
+            pid_o <= 0;
         end
         else begin
-            pid_o <= err * p_coef_i;
+            if (clk_en_i) begin             // compute PID values at a slower clock speed
+                i = i + err;
+                if (i > x)
+                    i = c1;
+                else if (i<y)
+                    i = c2l
+                else 
+                    i = i;
+                pid_o <= err * p_coef_i + i * i_coef_i;
+            end
         end
     end
 

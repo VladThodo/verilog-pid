@@ -4,7 +4,9 @@ module wrapper(
     input clk_in,
     input reset,
     input rx_data,
+    input sens_rx_data,
     output tx_data,
+    output pwm_o,
     output [15:0] p);
 
     wire serial_clk;
@@ -18,12 +20,19 @@ module wrapper(
     wire ser_busy;
     wire ser_send;
     wire [7:0] ser_data_send;
+    wire sens_write_data; 
+    wire [15:0] sens_data_o;
+    wire [15:0] i, d, s, sp;
+    wire pwm_clk;
+    wire [15:0] pid_out;
     
     assign clk = clk_in;
 
     clock_wizard wizard1(
         .clk_in(clk_in), 
-        .serial_clk(serial_clk));
+        .serial_clk(serial_clk),
+        .pwm_clk(pwm_clk)
+    );
 
     UART uart1(
         .clk_in(clk_in),
@@ -60,5 +69,39 @@ module wrapper(
         .r_addr(r_addr),
         .w_data(data_out),
         .r_data_o(r_data_o),
-        .p(p));
+        .p(p),
+        .i(i),
+        .d(d),
+        .s(s),
+        .sp(sp),
+        .sens_data_i(sens_data_o),
+        .sens_data_rdy_i(sens_write_data));
+        
+   sens_receiver rec1(
+        .clk_in_i(clk_in),
+        .reset_i(reset),
+        .clk_en_i(serial_clk),
+        .sens_in_i(sens_rx_data),
+        .sens_data_o(sens_data_o),
+        .sens_write_data_o(sens_write_data)       
+   );
+   
+   pid_controller pid(
+        .clk_in_i(clk_in),
+        .clk_en_i(serial_clk),
+        .p_coef_i(p),
+        .i_coef_i(i),
+        .d_coef_i(d),
+        .sp_i(sp),
+        .sens_data_i(s),
+        .pid_o(pid_out)
+   );
+   
+   pwm_gen pwm_gen(
+        .clk_in_i(clk_in),
+        .clk_en_i(pwm_clk),
+        .pid_out_i(pid_out),
+        .pwm_o(pwm_o)
+   );
+  
 endmodule

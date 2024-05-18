@@ -1,20 +1,8 @@
-"""
-    termbin.py - Copyright (C) Vlad Todosin 2024
-    Basic serial terminal used to send and receive raw binary data.
-    Usage: termbin.py [-p] [-b] [-d] [-l]
-        optional arguments:
-            -p          serial port name
-            -b          baudrate
-            -d          data display format, either hex or bin
-            -l          list serial ports
-
-"""
-
 import os
 import serial
 import time
 import argparse
-
+"""
 if __name__ == "__main__":
     # entry point of termbin
     parser = argparse.ArgumentParser(
@@ -30,8 +18,27 @@ def serial_init():
     
     """
 # serial port instance
-ser = serial.Serial('COM5', 
+ser = serial.Serial('COM6', 
                     baudrate=9600, 
                     timeout=3)
-                    """
+                
+a = bytearray()
+
+# for i in range(256):
+#     a.append(0x61)
+#     a.append(i)
+#     a.append(i)
+#     ser.write(a)
+#     a.clear()
+#     time.sleep(0.3)
+#     a.append(0x70)
+#     ser.write(a)
+#     print(ser.read(3)[1:].hex())
+#     a.clear()
+
+a.append(0x7D)
+while True:
+    ser.write(a)
+    print(ser.read(2).hex())
+    time.sleep(0.1)
 
