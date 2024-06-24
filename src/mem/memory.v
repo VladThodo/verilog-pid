@@ -10,6 +10,9 @@
 `define REG_FLAGS         7 // RW, flags register
 `define REG_PID_O_VAL     8 // RW, hard coded PID output value for testing and startup
 
+`define REG_ERR_VAL       10 // R - error value
+`define REG_I_VAL         11 // R - integral value
+`define REG_D_VAL         12 // R - derivative value
 `define REG_S_I           13 //R
 `define REG_PID_O         14 //R
 `define REG_PWM_O         15 //R
@@ -33,6 +36,9 @@ module memory(
     output wire [15:0] int_up_o,
     output wire [15:0] int_low_o,
     input wire [15:0] pid_o_i,
+    input wire [15:0] integral_i,
+    input wire [15:0] err_i,
+    input wire [15:0] deriv_i,
     input wire [15:0] pwm_o_i);
 
     reg[15:0] mem [15:0];
@@ -41,6 +47,9 @@ module memory(
     always @(posedge clk_in) begin
         mem[`REG_PID_O] <= pid_o_i;
         mem[`REG_PWM_O] <= pwm_o_i;
+        mem[`REG_D_VAL] <= deriv_i;
+        mem[`REG_I_VAL] <= integral_i;
+        mem[`REG_ERR_VAL] <= err_i;
         if (sens_data_rdy_i) begin
             mem[`REG_S_I] <= sens_data_i;
         end
@@ -64,7 +73,7 @@ module memory(
     assign s = mem[`REG_S_I]; // measured distance from sensor
     assign sp = mem[`REG_SP]; // PID set point
     assign offset_o = mem[`REG_OFF]; // PID controller offset
-    assign int_up_o = mem[`REG_I_UP]; // PID controller offset
-    assign int_low_o = mem[`REG_I_LOW]; // PID controller offset
+    assign int_up_o = mem[`REG_I_UP]; // Integral upper limit
+    assign int_low_o = mem[`REG_I_LOW]; // Integral lower limit
     
 endmodule

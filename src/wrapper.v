@@ -28,13 +28,18 @@ module wrapper(
     wire [15:0] offset;
     wire [15:0] int_low;
     wire [15:0] int_high;
+    wire [15:0] deriv_o;
+    wire [15:0] int_o;
+    wire [15:0] err_o;
+    wire pid_clk_en;
     
     assign clk = clk_in;
 
     clock_wizard wizard1(
         .clk_in(clk_in), 
         .serial_clk(serial_clk),
-        .pwm_clk(pwm_clk)
+        .pwm_clk(pwm_clk),
+        .pid_clk(pid_clk_en)
     );
 
     UART uart1(
@@ -82,6 +87,9 @@ module wrapper(
         .pid_o_i(pid_out),
         .sens_data_i(sens_data_o),
         .offset_o(offset),
+        .integral_i(int_o),
+        .deriv_i(deriv_o),
+        .err_i(err_o),
         .sens_data_rdy_i(sens_write_data));
         
    sens_receiver rec1(
@@ -95,7 +103,7 @@ module wrapper(
    
    pid_controller pid(
         .clk_in_i(clk_in),
-        .clk_en_i(serial_clk),
+        .clk_en_i(pid_clk_en),
         .p_coef_i(p),
         .i_coef_i(i),
         .d_coef_i(d),
@@ -104,6 +112,10 @@ module wrapper(
         .pid_o(pid_out),
         .int_low_i(int_low),
         .int_up_i(int_high),
+        .sens_data_rdy(sens_write_data),
+        .int_o(int_o),
+        .err_o(err_o),
+        .deriv_o(deriv_o),
         .offset_i(offset)
    );
    

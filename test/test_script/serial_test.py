@@ -56,7 +56,15 @@ a = bytearray() # re init bytearray
 
 a.append(0x61) # write integral coef
 a.append(0x00)
-a.append(0x03)
+a.append(0x04)
+
+ser.write(a)
+
+a = bytearray() # re init bytearray
+
+a.append(0x62) # write derivative coef
+a.append(0x00)
+a.append(0xf0)
 
 ser.write(a)
 
@@ -66,7 +74,7 @@ a = bytearray() # re init bytearray
 
 a.append(0x63) # write set point
 a.append(0x00)
-a.append(0x08)
+a.append(0x0a)
 
 ser.write(a)
 
@@ -75,8 +83,8 @@ ser.write(a)
 a = bytearray() # re init bytearray
 
 a.append(0x64) # write offset
-a.append(0x06)
-a.append(0xf0)
+a.append(0x03)
+a.append(0x80)
 
 ser.write(a)
 
@@ -84,7 +92,7 @@ a = bytearray()  # re init byte array
 
 a.append(0x65) # write integral upper limit
 a.append(0x00)
-a.append(0xFF)
+a.append(0xa0)
 
 ser.write(a)
 
@@ -92,7 +100,7 @@ a = bytearray()  # re init byte array
 
 a.append(0x66) # write integral lower limit
 a.append(0x00)
-a.append(0xA0)
+a.append(0xD0)
 
 ser.write(a)
 
@@ -103,7 +111,16 @@ a = bytearray()
 time.sleep(1)
 ser.reset_input_buffer()
 ser.reset_output_buffer()
-while True:
+
+sens_values = []
+time_vals = []
+
+t = 0
+
+print("NOW!")
+time.sleep(3)
+
+for i in range(0, 500): # collect 1000 samples
     a.append(0x7D)
     ser.write(a)
     distance = int.from_bytes(ser.read(2), "big")
@@ -112,6 +129,10 @@ while True:
     ser.write(a)
     pid_out = int.from_bytes(ser.read(2), "big")
     a.clear()
-    print(f"{distance}  ;  {pid_out}")
-    #time.sleep(0.1)
+    sens_values.append(distance)
+    time_vals.append(t)
+    t += 0.002
+    time.sleep(0.01)
 
+print(sens_values)
+print(time_vals)

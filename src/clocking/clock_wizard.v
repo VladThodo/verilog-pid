@@ -11,11 +11,11 @@ module clock_wizard(
 
     parameter serial_div = 651;
     parameter pwm_div = 4000;
-    parameter pid_div = 0;
+    parameter pid_div = 8000000;
 
     reg [15:0] serial_cnt = 0;
     reg [15:0] pwm_cnt = 0;
-    reg [15:0] pid_cnt = 0;
+    reg [32:0] pid_cnt = 0;
 
     // Generates clock pulses at ~153600 Hz
 
@@ -41,7 +41,7 @@ module clock_wizard(
         end
     end
 
-    // Generates clock pulses at ~15Hz, used for sensor sampling
+    // Generates clock pulses at ~5Hz, used for sensor sampling
 
     always @(posedge clk_in) begin
         if(pid_cnt == pid_div) begin
