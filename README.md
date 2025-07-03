@@ -1,7 +1,7 @@
 # Verilog PID controller
 This was developed as part of my Bachelor's diploma project. It is a full system capable of communicating with a computer via serial UART and reading data from a serial-capable sensor. It can be adapted to any sort of sensor without too much difficulty.
 
-The GitHub documentation is still under development.
+The GitHub documentation is still under development. If you think this project might help ypu, please reach out to me for more detailed information.
 
 # System architecture overview
 
