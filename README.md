@@ -7,7 +7,7 @@ The GitHub documentation is still under development. If you think this project m
 
 As a practical application, the PID controller is responsible of controlling the height at which a ping-pong ball "levitates" in a plastic tube by adjusting the speed of a fan. As such, the system was developed more or less proprietary for this application.
 
-Most of the important modules communicate via the memory module. Although this might seem overly complicated at first, it allow for easy, real-time debugging, as memory locations can be read continously via serial at runtime and various graphs (such as the integral compontent of the PID) can be plotted. 
+Most of the important modules communicate via the memory module. Although this might seem overly complicated at first, it allows for easy, real-time, debugging, as memory locations can be read continously via serial at runtime and various graphs (such as the integral compontent of the PID) can be plotted. 
 
 A Python script for reading the data and saving the results in `.mat` files for analysis in Matlab is also provided. It was mostly designed to plot the step response of the system, but can be adapted to various other tasks.
 
